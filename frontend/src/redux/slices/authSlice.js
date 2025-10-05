@@ -32,7 +32,7 @@ export const login = createAsyncThunk(
         // Standard format: { token, user }
         userData = data.user;
       } else {
-        // Your backend’s format: token + user fields directly
+        // Your backend's format: token + user fields directly
         userData = {
           _id: data._id,
           username: data.username,
@@ -53,13 +53,36 @@ export const login = createAsyncThunk(
   }
 );
 
-// 🔹 SIGNUP
+// 🔹 SIGNUP - Now stores token and authenticates user
 export const signup = createAsyncThunk(
   'auth/signup',
   async (formData, { rejectWithValue }) => {
     try {
       const data = await signupAPI(formData);
-      return data;
+      
+      // ✅ Handle token and user data from signup response
+      let userData;
+
+      if (data.user) {
+        // Standard format: { token, user }
+        userData = data.user;
+      } else {
+        // Your backend's format: token + user fields directly
+        userData = {
+          _id: data._id,
+          username: data.username,
+          email: data.email,
+          profileImageUrl: data.profileImageUrl || '',
+        };
+      }
+
+      // ✅ Store token and user in localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+
+      return { token: data.token, user: userData };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -154,13 +177,16 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // SIGNUP
+      // SIGNUP - Now authenticates user automatically
       .addCase(signup.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(signup.fulfilled, (state) => {
+      .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
         state.error = null;
       })
       .addCase(signup.rejected, (state, action) => {

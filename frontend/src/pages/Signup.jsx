@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,8 +12,12 @@ const Signup = ({ showToast }) => {
   const handleSignup = async (formData) => {
     try {
       await dispatch(signup(formData)).unwrap();
-      showToast('Signup successful! Please log in.');
-      navigate('/login'); // ✅ Redirect to login after successful signup
+      showToast('Signup successful! Welcome to WareFlow!');
+      
+      // ✅ Redirect to dashboard after successful signup
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 500);
     } catch (error) {
       const message = error?.message || String(error);
       showToast(message, 'error');
