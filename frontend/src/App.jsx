@@ -1,49 +1,86 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Navbar from './components/layout/Navbar';
+import Toast from './components/shared/Toast';
+import { checkAuth } from './redux/slices/authSlice';
 
+const App = () => {
+  const dispatch = useDispatch();
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const [toast, setToast] = useState(null);
 
-function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      
-      {/* Test Card */}
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-md">
-        
-        {/* Header */}
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">
-          Tailwind Test
-        </h1>
-        
-        {/* Color Tests */}
-        <div className="space-y-3">
-          <p className="text-red-500 font-semibold">
-            ✓ Red text - Tailwind working!
-          </p>
-          <p className="text-green-500 font-semibold">
-            ✓ Green text - Tailwind working!
-          </p>
-          <p className="text-yellow-500 font-semibold">
-            ✓ Yellow text - Tailwind working!
-          </p>
-          <p className="text-purple-500 font-semibold">
-            ✓ Purple text - Tailwind working!
-          </p>
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
-        
-        {/* Button Test */}
-        <button className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full transition duration-300">
-          Click Me - Hover Effect
-        </button>
-        
-        {/* Info Box */}
-        <div className="mt-6 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded">
-          <p className="text-yellow-700 text-sm">
-            If you see colors, rounded corners, shadows, and spacing - Tailwind is working perfectly! 🎉
-          </p>
-        </div>
-        
       </div>
-      
-    </div>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar showToast={showToast} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Login showToast={showToast} />
+              )
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <Signup showToast={showToast} />
+              )
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              isAuthenticated ? (
+                <Dashboard showToast={showToast} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+      </div>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
