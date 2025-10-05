@@ -32,6 +32,8 @@ A complete warehouse management system built with the MERN stack (MongoDB, Expre
 - **Cloudinary** - Image storage
 - **Bcrypt** - Password hashing
 
+## Postman collection
+[Link](https://.postman.co/workspace/My-Workspace~b1a644ef-7f9e-4221-8256-c9a67803a2c7/collection/46135971-24419f24-01c0-46e8-8e64-0b8d475d0136?action=share&creator=46135971&active-environment=46135971-a3957b9c-cddb-4640-81b1-a6c240a95a51)
 
 ## 🚀 Usage
 
@@ -46,7 +48,6 @@ A complete warehouse management system built with the MERN stack (MongoDB, Expre
 ### Dashboard
 
 <img width="956" height="474" alt="dashborad" src="https://github.com/user-attachments/assets/7ec1a92d-326b-4f77-91db-07920501227d" />
-
 
 
 ## 👨‍💻 Author
