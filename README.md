@@ -44,7 +44,7 @@ A complete warehouse management system built with the MERN stack (MongoDB, Expre
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](./assets/dashboard.png)
+[Dashboard](./assets/dashboard.png)
 
 
 ## 👨‍💻 Author
