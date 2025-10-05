@@ -9,8 +9,8 @@ module.exports = async (req, res) => {
     // Delete all products in this warehouse
     await Product.deleteMany({ warehouse: warehouse._id });
 
-    // Use deleteOne() instead of deprecated remove()
-    await warehouse.deleteOne();
+    
+    await warehouse.deleteOne();//using deleteOne() coz remove() is no more support
 
     res.json({ message: 'Warehouse and its products deleted' });
   } catch (error) {
