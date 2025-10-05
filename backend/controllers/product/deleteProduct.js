@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
       fs.unlinkSync(oldImagePath);
     }
 
-    
+    // Use deleteOne() instead of deprecated remove()
     await product.deleteOne();
 
     res.json({ message: 'Product deleted' });

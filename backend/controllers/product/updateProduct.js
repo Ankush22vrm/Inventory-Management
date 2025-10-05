@@ -4,6 +4,12 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (req, res) => {
+    // ADD THIS LOGGING
+  console.log('Update Product Request:');
+  console.log('Body:', req.body);
+  console.log('File:', req.file);
+  console.log('Params:', req.params);
+  // END LOGGING
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     if (req.file) fs.unlinkSync(req.file.path);

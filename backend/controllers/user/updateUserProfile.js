@@ -1,4 +1,3 @@
-
 const User = require('../../models/User');
 const cloudinary = require('../../config/cloudinaryConfig');
 const { validationResult } = require('express-validator');
