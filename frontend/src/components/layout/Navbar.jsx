@@ -8,6 +8,8 @@ import ProfileIcon from '../shared/ProfileIcon';
 import DeleteDialog from '../shared/DeleteDialog';
 import UpdateProfileForm from '../profile/UpdateProfileForm';
 import { logout, deleteAccount } from '../../redux/slices/authSlice';
+import { clearWarehouses } from '../../redux/slices/warehouseSlice';
+import { clearProducts } from '../../redux/slices/productSlice';
 
 const Navbar = ({ showToast }) => {
   const dispatch = useDispatch();
@@ -28,6 +30,8 @@ const Navbar = ({ showToast }) => {
   const isHomePage = location.pathname === '/';
 
   const handleLogout = () => {
+    dispatch(clearWarehouses());
+    dispatch(clearProducts());
     dispatch(logout());
     setShowProfileMenu(false);
     showToast('Logged out successfully!');
@@ -38,6 +42,10 @@ const Navbar = ({ showToast }) => {
     setDeleteLoading(true);
     try {
       await dispatch(deleteAccount()).unwrap();
+
+      dispatch(clearWarehouses());
+      dispatch(clearProducts());
+
       showToast('Account deleted successfully!');
       setShowDeleteDialog(false);
       navigate('/');

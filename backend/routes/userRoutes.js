@@ -19,8 +19,7 @@ const upload = multer({ storage });
 // Validation rules (basic example)
 const updateValidation = [
   body('username').optional().isLength({ min: 3 }).withMessage('Username should be minimum 3 characters'),
-//   body('email').optional().isEmail().withMessage('Invalid email'),
-//   body('password').optional().isLength({ min: 6 }).withMessage('Password should be minimum 6 characters'),
+
 ];
 
 router.use(protect);

@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     const warehouse = await Warehouse.findOne({ _id: warehouseId, user: req.user._id });
     if (!warehouse) return res.status(404).json({ message: 'Warehouse not found or unauthorized' });
 
-    // ✅ FIX: Properly parse the inStock value
+    // Properly parse the inStock value
     const isInStock = inStock === 'true' || inStock === true;
 
     const product = new Product({

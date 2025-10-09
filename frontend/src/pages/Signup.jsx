@@ -14,9 +14,8 @@ const Signup = ({ showToast }) => {
       await dispatch(signup(formData)).unwrap();
       showToast('Signup successful! Welcome to WareFlow!');
       
-      // ✅ Redirect to dashboard after successful signup
       setTimeout(() => {
-        navigate('/dashboard', { replace: true });
+        navigate('/login', { replace: true });
       }, 500);
     } catch (error) {
       const message = error?.message || String(error);

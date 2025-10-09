@@ -19,6 +19,7 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
 
   useEffect(() => {
     if (product) {
+      // EDIT MODE - Pre-fill with existing data
       setFormData({
         name: product.name,
         category: product.category,
@@ -27,6 +28,7 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
         image: null,
       });
     } else {
+      // ADD MODE - Empty form
       setFormData({
         name: '',
         category: 'electronics',

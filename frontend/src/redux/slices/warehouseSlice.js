@@ -56,6 +56,12 @@ const warehouseSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+     clearWarehouses: (state) => {
+      state.warehouses = [];
+      state.selectedWarehouse = null;
+      state.loading = false;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,5 +88,5 @@ const warehouseSlice = createSlice({
   },
 });
 
-export const { setSelectedWarehouse, clearError } = warehouseSlice.actions;
+export const { setSelectedWarehouse, clearError,clearWarehouses  } = warehouseSlice.actions;
 export default warehouseSlice.reducer;

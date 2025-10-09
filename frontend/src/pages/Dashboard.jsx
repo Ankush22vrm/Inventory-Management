@@ -40,11 +40,13 @@ const Dashboard = ({ showToast }) => {
     type: null,
     id: null,
   });
+  //filter and search update
   const [filters, setFilters] = useState({
     search: '',
     category: '',
     status: '',
   });
+
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -60,6 +62,7 @@ const Dashboard = ({ showToast }) => {
     }
   }, [dispatch, selectedWarehouse]);
 
+// add warehouse
   const handleAddWarehouse = async (data) => {
     try {
       await dispatch(createWarehouse(data)).unwrap();
@@ -69,7 +72,7 @@ const Dashboard = ({ showToast }) => {
       showToast(error.message || 'Failed to add warehouse', 'error');
     }
   };
-
+//delete warehouse
   const handleDeleteWarehouse = async () => {
     try {
       await dispatch(deleteWarehouse(deleteDialog.id)).unwrap();
@@ -79,11 +82,12 @@ const Dashboard = ({ showToast }) => {
       showToast(error.message || 'Failed to delete warehouse', 'error');
     }
   };
-
+//select warehouse
   const handleSelectWarehouse = (warehouse) => {
     dispatch(setSelectedWarehouse(warehouse));
   };
 
+  //add product
   const handleAddProduct = async (data) => {
     try {
       if (editingProduct) {
@@ -100,6 +104,7 @@ const Dashboard = ({ showToast }) => {
     }
   };
   
+  //delete product;
   const handleDeleteProduct = async () => {
     try {
       await dispatch(deleteProduct(deleteDialog.id)).unwrap();
@@ -112,10 +117,13 @@ const Dashboard = ({ showToast }) => {
 
   const filteredProducts = products
     .filter((p) => {
+      // Text search in product name
       const matchesSearch = p.name
         .toLowerCase()
         .includes(filters.search.toLowerCase());
+        // Category filter
       const matchesCategory = !filters.category || p.category === filters.category;
+       // Stock status filter
       const matchesStatus =
         !filters.status ||
         (filters.status === 'inStock' ? p.inStock : !p.inStock);

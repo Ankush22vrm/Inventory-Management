@@ -6,8 +6,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, trim: true, unique: true },
   password: { type: String, required: true },
   profileImageUrl: { type: String },
-  // Store Cloudinary public_id for image deletion (added for profile image management)
-  profileImagePublicId: { type: String }, // <-- ADDED for Cloudi
+  profileImagePublicId: { type: String }, 
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

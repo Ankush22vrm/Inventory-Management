@@ -2,7 +2,9 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from '../components/auth/LoginForm';
-import { login } from '../redux/slices/authSlice'; // ✅ import the thunk, not the API
+import { login } from '../redux/slices/authSlice'; 
+import { clearWarehouses } from '../redux/slices/warehouseSlice';
+import { clearProducts } from '../redux/slices/productSlice';
 
 const Login = ({ showToast }) => {
   const navigate = useNavigate();
@@ -11,13 +13,14 @@ const Login = ({ showToast }) => {
 
   const handleLogin = async (credentials) => {
     try {
-      // ✅ Dispatch Redux thunk (handles token, user, etc.)
+      
+      dispatch(clearWarehouses());
+      dispatch(clearProducts());
+      
       await dispatch(login(credentials)).unwrap();
-
       showToast('Login successful!');
       navigate('/dashboard');
     } catch (error) {
-      // ✅ Ensure only string/error.message is passed
       const message = error?.message || String(error);
       showToast(message, 'error');
     }

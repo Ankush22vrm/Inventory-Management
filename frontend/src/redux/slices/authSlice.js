@@ -18,14 +18,14 @@ const initialState = {
   error: null,
 };
 
-// 🔹 LOGIN
+//  LOGIN
 export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const data = await loginAPI(credentials);
 
-      // ✅ Handle both response formats (with or without nested user object)
+      // Handle both response formats (with or without nested user object)
       let userData;
 
       if (data.user) {
@@ -53,36 +53,13 @@ export const login = createAsyncThunk(
   }
 );
 
-// 🔹 SIGNUP - Now stores token and authenticates user
+//  SIGNUP - Now stores token and authenticates user
 export const signup = createAsyncThunk(
   'auth/signup',
   async (formData, { rejectWithValue }) => {
     try {
       const data = await signupAPI(formData);
-      
-      // ✅ Handle token and user data from signup response
-      let userData;
-
-      if (data.user) {
-        // Standard format: { token, user }
-        userData = data.user;
-      } else {
-        // Your backend's format: token + user fields directly
-        userData = {
-          _id: data._id,
-          username: data.username,
-          email: data.email,
-          profileImageUrl: data.profileImageUrl || '',
-        };
-      }
-
-      // ✅ Store token and user in localStorage
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(userData));
-      }
-
-      return { token: data.token, user: userData };
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }

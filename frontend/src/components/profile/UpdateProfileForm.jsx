@@ -14,6 +14,8 @@ const UpdateProfileForm = ({ isOpen, onClose, showToast }) => {
     username: '',
     profileImage: null,
   });
+ //3
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -22,11 +24,33 @@ const UpdateProfileForm = ({ isOpen, onClose, showToast }) => {
         profileImage: null,
       });
     }
-  }, [user]);
+    //5 Clear errors when modal opens
+    setErrors({});
+  }, [user,isOpen]);
+
+  //1validate
+   const validate = () => {
+    const newErrors = {};
+    
+    if (!formData.username || formData.username.trim() === '') {
+      newErrors.username = 'Username is required';
+    } else if (formData.username.trim().length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    }
+    
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //2
+    const newErrors = validate();
     
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const data = new FormData();
       data.append('username', formData.username);
@@ -48,9 +72,15 @@ const UpdateProfileForm = ({ isOpen, onClose, showToast }) => {
         <Input
           label="Username"
           value={formData.username}
-          onChange={(e) =>
+          onChange={(e) =>{
             setFormData({ ...formData, username: e.target.value })
-          }
+            //4 Clear error when user starts typing
+            if (errors.username) {
+              setErrors({ ...errors, username: '' });
+            }
+
+          }}
+          error={errors.username}
           placeholder="Enter username"
         />
         <Input

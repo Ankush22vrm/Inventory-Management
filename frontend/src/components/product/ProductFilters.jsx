@@ -7,6 +7,7 @@ const ProductFilters = ({ filters, onFilterChange, onReset }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mb-6">
       <div className="flex flex-wrap gap-4">
+        {/* searching */}
         <div className="flex-1 min-w-[200px]">
           <div className="relative">
             <Search
@@ -24,6 +25,7 @@ const ProductFilters = ({ filters, onFilterChange, onReset }) => {
             />
           </div>
         </div>
+        {/* category drop down */}
         <select
           value={filters.category}
           onChange={(e) =>
@@ -38,6 +40,7 @@ const ProductFilters = ({ filters, onFilterChange, onReset }) => {
             </option>
           ))}
         </select>
+         {/*  STATUS DROPDOWN */}
         <select
           value={filters.status}
           onChange={(e) =>
@@ -49,6 +52,7 @@ const ProductFilters = ({ filters, onFilterChange, onReset }) => {
           <option value="inStock">In Stock</option>
           <option value="outOfStock">Out of Stock</option>
         </select>
+        {/*  RESET BUTTON */}
         <Button variant="secondary" onClick={onReset}>
           Reset Filters
         </Button>

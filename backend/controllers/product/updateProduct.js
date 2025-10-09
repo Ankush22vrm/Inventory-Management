@@ -4,12 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (req, res) => {
-    // ADD THIS LOGGING
-  console.log('Update Product Request:');
-  console.log('Body:', req.body);
-  console.log('File:', req.file);
-  console.log('Params:', req.params);
-  // END LOGGING
+   
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -33,7 +28,7 @@ module.exports = async (req, res) => {
     product.inStock = req.body.inStock !== undefined ? (req.body.inStock === 'true' || req.body.inStock === true) : product.inStock;
     product.quantity = req.body.quantity !== undefined ? Number(req.body.quantity) : product.quantity;
     product.pricePerUnit = req.body.pricePerUnit !== undefined ? Number(req.body.pricePerUnit) : product.pricePerUnit;
-
+  
     if (req.file) {
       const oldImagePath = path.join(__dirname, '../../', product.imageUrl);
       if (fs.existsSync(oldImagePath)) {

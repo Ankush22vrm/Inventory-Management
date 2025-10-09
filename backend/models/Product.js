@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
   pricePerUnit: { type: Number, required: true },
   totalValue: { type: Number },
   imageUrl: { type: String, required: true },
+  imgUrl : {type:String, required:true},
   warehouse: { type: mongoose.Schema.Types.ObjectId, ref: 'Warehouse', required: true },
 }, { timestamps: true });
 
