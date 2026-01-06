@@ -1,4 +1,3 @@
-
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 const API_URL = `${API_BASE_URL}/api`;
 
@@ -27,11 +26,11 @@ const api = {
           : undefined,
     };
 
-    console.log('API Request:', {
+    console.log('🌐 API Request:', {
       url: `${API_URL}${url}`,
-      method: options.method,
+      method: options.method || 'GET',
       isFormData: options.body instanceof FormData,
-      headers: config.headers,
+      hasToken: !!token,
     });
 
     try {
@@ -39,7 +38,7 @@ const api = {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        console.error('API Error Response:', {
+        console.error('❌ API Error Response:', {
           status: response.status,
           statusText: response.statusText,
           data,
@@ -48,15 +47,21 @@ const api = {
         // Better error message handling
         const errorMessage = 
           data.message || 
-          (data.errors && Array.isArray(data.errors) ? data.errors.map(e => e.msg).join(', ') : '') ||
-          'Something went wrong';
+          (data.errors && Array.isArray(data.errors) 
+            ? data.errors.map(e => e.msg || e.message).join(', ') 
+            : '') ||
+          (data.details && Array.isArray(data.details)
+            ? data.details.map(d => `${d.field}: ${d.message}`).join(', ')
+            : '') ||
+          `Request failed with status ${response.status}`;
         
         throw new Error(errorMessage);
       }
 
+      console.log('✅ API Success:', { url, status: response.status });
       return data;
     } catch (error) {
-      console.error('API Request Failed:', error);
+      console.error('❌ API Request Failed:', error);
       throw error;
     }
   },

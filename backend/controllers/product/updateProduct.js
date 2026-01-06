@@ -4,10 +4,15 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (req, res) => {
-   
+  console.log('=== UPDATE PRODUCT REQUEST ===');
+  console.log('Product ID:', req.params.id);
+  console.log('Body:', req.body);
+  console.log('File:', req.file);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     if (req.file) fs.unlinkSync(req.file.path);
+    console.log('❌ Validation errors:', errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -16,12 +21,15 @@ module.exports = async (req, res) => {
 
     if (!product) {
       if (req.file) fs.unlinkSync(req.file.path);
+      console.log('❌ Product not found:', req.params.id);
       return res.status(404).json({ message: 'Product not found' });
     }
 
     // Verify ownership by warehouse user
-    if (String(product.warehouse) !== req.body.warehouseId)
+    if (String(product.warehouse) !== req.body.warehouseId) {
+      console.log('❌ Unauthorized access attempt');
       return res.status(403).json({ message: 'Unauthorized' });
+    }
 
     product.name = req.body.name || product.name;
     product.category = req.body.category || product.category;
@@ -39,10 +47,15 @@ module.exports = async (req, res) => {
     }
 
     await product.save();
+    console.log('✅ Product updated successfully:', product._id);
 
     res.json(product);
   } catch (error) {
     if (req.file) fs.unlinkSync(req.file.path);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error('❌ Server error:', error);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
   }
 };

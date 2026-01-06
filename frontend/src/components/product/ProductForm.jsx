@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Modal from '../shared/Modal';
 import Input from '../shared/Input';
@@ -42,7 +41,7 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name || formData.name.length < 2)
+    if (!formData.name || formData.name.trim().length < 2)
       newErrors.name = 'Name must be at least 2 characters';
     if (formData.quantity === '' || Number(formData.quantity) < 0)
       newErrors.quantity = 'Quantity must be zero or positive';
@@ -50,6 +49,8 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
       newErrors.pricePerUnit = 'Price must be zero or positive';
     if (!product && !formData.image)
       newErrors.image = 'Product image is required';
+    if (!warehouseId)
+      newErrors.warehouse = 'Warehouse ID is missing';
     return newErrors;
   };
 
@@ -62,7 +63,7 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
       try {
         const data = new FormData();
         
-        data.append('name', formData.name);
+        data.append('name', formData.name.trim());
         data.append('category', formData.category);
         data.append('quantity', formData.quantity);
         data.append('pricePerUnit', formData.pricePerUnit);
@@ -77,15 +78,20 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
           data.append('image', formData.image);
         }
 
-        // Log FormData contents
-        console.log('FormData contents:');
+        // Better logging for FormData
+        console.log('=== Submitting Product Form ===');
+        console.log('Mode:', product ? 'EDIT' : 'CREATE');
+        console.log('Product ID:', product?._id || 'N/A');
+        console.log('Warehouse ID:', warehouseId);
+        console.log('Form Data:');
         for (let [key, value] of data.entries()) {
-          console.log(`${key}:`, value);
+          if (value instanceof File) {
+            console.log(`  ${key}: File(${value.name}, ${value.size} bytes)`);
+          } else {
+            console.log(`  ${key}:`, value);
+          }
         }
         
-        console.log('Product ID for update:', product?._id);
-        console.log('Is editing:', !!product);
-
         await onSubmit(data);
         
         setFormData({
@@ -97,13 +103,16 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
         });
         setErrors({});
       } catch (error) {
-        console.error('Form submission error:', error);
-        setErrors({ submit: error.message || 'Failed to submit form' });
+        console.error('❌ Form submission error:', error);
+        const errorMessage = error.response?.data?.message || 
+                           error.message || 
+                           'Failed to submit form';
+        setErrors({ submit: errorMessage });
       } finally {
         setLoading(false);
       }
     } else {
-      console.log('Validation errors:', newErrors);
+      console.log('❌ Validation errors:', newErrors);
       setErrors(newErrors);
     }
   };
@@ -122,6 +131,12 @@ const ProductForm = ({ isOpen, onClose, onSubmit, warehouseId, product }) => {
         {errors.submit && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
             {errors.submit}
+          </div>
+        )}
+        
+        {errors.warehouse && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {errors.warehouse}
           </div>
         )}
         
